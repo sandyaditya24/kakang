@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny for unmapped collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidString(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    // Menu Collection: Public read for customers; validated writes
+    match /menu/{menuId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.name is string 
+        && request.resource.data.name.size() > 0 
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.price is number
+        && request.resource.data.price >= 0;
+      allow delete: if true;
+    }
+
+    // Orders Collection: Customers can place orders, view their order, and admin can update status
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if request.resource.data.id is string
+        && request.resource.data.customerName is string
+        && request.resource.data.total is number;
+      allow update: if request.resource.data.total is number;
+      allow delete: if false;
+    }
+
+    // Settings Collection: Public read for store info & logo; validated update
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if request.resource.data.storeName is string;
+    }
+
+    // Test connection check
+    match /test/{testId} {
+      allow read: if true;
+    }
+  }
+}
