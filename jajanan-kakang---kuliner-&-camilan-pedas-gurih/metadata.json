@@ -1,6 +1,0 @@
-{
-  "name": "Jajanan Kakang - Kuliner & Camilan Pedas Gurih",
-  "description": "Aplikasi pemesanan jajanan khas Nusantara dan manajemen pesanan Jajanan Kakang.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
